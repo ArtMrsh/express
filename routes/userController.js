@@ -1,11 +1,8 @@
 const router = require('express').Router();
 const checkValidity = require('../helpers/checkValidity');
 
-const users = [
-  { id: 01, name: 'jack', email: 'jack@.com' },
-  { id: 02, name: 'john', email: 'john@.com' }
-]
 
+  
 router.get('/', (req, res, next) => {
   res.send(users);
 })
