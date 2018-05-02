@@ -1,50 +1,66 @@
 const router = require('express').Router();
+const Board = require('../models/board.model');
 
-const boards = [
-  { name: 'board 1', list: [] },
-  { name: 'board 2', list: [] }
-];
 
 router.get('/', (req, res, next) => {
-  res.send(boards)
+  Board.find()
+    .then(result => {
+      res.send(result)
+    })
+    .catch(err => {
+      res.send(result)
+    })
 })
 
-router.get('/:name', (req, res, next) => {
-  const foundedBoard = boards.find((obj) => obj.name == req.params.name.toLowerCase());
-
-  if(foundedBoard) {
-    res.send(foundedBoard);
-  } else {
-    res.status(404).send(`Board with name '${req.params.name}' does not exists`)
-  }
+router.get('/:id', (req, res, next) => {
+  Board.findById(req.params.id)
+    .then(result => {
+      res.send(result)
+    })
+    .catch(err => {
+      res.send(err.message)
+    })
 })
 
 router.post('/', (req, res, next) => {
-  boards.push(req.query);
-  res.send(req.query);
+
+  const board = new Board({
+    name: req.body.name,
+    lists: req.body.lists
+  })
+
+  board.save()
+    .then(result => {
+      res.send(result)
+    }).catch(err => {
+      res.status(500).send(err.message)
+    })
+
 })
 
-router.put('/:name', (req, res, next) => {
-  const foundedBoard = boards.find((obj) => obj.name == req.params.name.toLowerCase());
-
-  if(foundedBoard) {
-    Object.assign(foundedBoard, req.query)
-    res.send(foundedBoard)
-  } else {
-    res.status(404).send(`Board with name '${req.params.name}' does not exists`)
-  }
-  
+router.put('/:boardId', (req, res, next) => {
+  Board.findByIdAndUpdate(req.params.boardId, req.body, { new: true })
+    .then(result => {
+      return result;
+    })
+    .then(data => {
+      console.log(data)
+      res.send(data);
+    })
+    .catch(err => {
+      res.send(err.message)
+    })
 })
 
-router.delete('/:name', (req, res, next) => {
-  const foundedBoard = boards.find((obj) => obj.name == req.params.name.toLowerCase());
-
-  if(foundedBoard) {
-    res.send(boards.splice(foundedBoard, 1))
-  } else {
-    res.status(404).send(`User with name '${req.params.name}' does not exists`)
-  }
-
+router.delete('/:boardId', (req, res, next) => {
+  const boardId = req.params.boardId; 
+  Board.findByIdAndRemove(boardId)
+    .then(result => {
+      res.send(result)
+    })
+    .catch(err => {
+      res.status(404).send('Not found')
+    })
 })
 
 module.exports = router;

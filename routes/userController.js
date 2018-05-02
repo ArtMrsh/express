@@ -1,59 +1,69 @@
 const router = require('express').Router();
 const checkValidity = require('../helpers/checkValidity');
+// const mongoose = require('mongoose');
+const User = require('../models/user.model');
 
 
-  
 router.get('/', (req, res, next) => {
-  res.send(users);
+  User.find()
+    .then(result => {
+      res.send(result)
+    })
+    .catch(err => {
+      res.send(result)
+    })
 })
 
-
-
-router.get('/:name', (req, res, next) => {
-  const foundedUser = users.find((obj) => obj.name == req.params.name.toLowerCase());
-
-  if (foundedUser) {
-    res.send(foundedUser)
-  } else {
-    res.status(404).send(`User with name '${req.params.name}' does not exists`)
-  }
-
+router.get('/:id', (req, res, next) => {
+  User.findById(req.params.id)
+    .then(result => {
+      res.send(result)
+    })
+    .catch(err => {
+      res.send(err.message)
+    })
 })
 
 router.post('/', (req, res, next) => {
-  users.push(req.query);
 
-  req.check('name', 'Name is not valid').isLength({min: 0});
-  
-  if(checkValidity(req.validationErrors())) {
-    res.send(users)
-  } else {
-    res.status(418).send(req.validationErrors())
-  }
-  
-})
+  const user = new User({
+    name: req.body.name,
+    email: req.body.email
+  })
 
-router.put('/:name', (req, res, next) => {
-  const foundedUser = users.find((obj) => obj.name == req.params.name.toLowerCase());
-
-  if (foundedUser) {
-    Object.assign(foundedUser, req.query)
-    res.send(foundedUser)
-  } else {
-    res.status(404).send(`User with name '${req.params.name}' does not exists`)
-  }
+  user.save()
+    .then(result => {
+      res.send(result)
+    })
+    .catch(err => {
+      res.status(500).send(err.message)
+    })
 
 })
 
-router.delete('/:name', (req, res, next) => {
-  const foundedUser = users.find((obj) => obj.name == req.params.name);
+router.put('/:userId', (req, res, next) => {
+  User.findByIdAndUpdate(req.params.userId, req.body, { new: true })
+    .then(result => {
+      return result;
+    })
+    .then(data => {
+      console.log(data)
+      res.send(data);
+    })
+    .catch(err => {
+      res.send(err.message)
+    })
+})
 
-  if (foundedUser) {
-    res.send(users.splice(foundedUser, 1))
-  } else {
-    res.status(404).send(`User with name '${req.params.name}' does not exists`)
-  }
-
+router.delete('/:userId', (req, res, next) => {
+  const userId = req.params.userId; 
+  User.findByIdAndRemove(userId)
+    .then(result => {
+      res.send(result)
+    })
+    .catch(err => {
+      res.status(404).send('Not found')
+    })
 })
 
 module.exports = router;
