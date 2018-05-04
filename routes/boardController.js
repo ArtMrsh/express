@@ -3,6 +3,7 @@ const Board = require('../models/board.model');
 
 
 router.get('/', (req, res, next) => {
+  console.log(req.user)
   Board.find()
     .then(result => {
       res.send(result)
