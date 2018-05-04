@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const Board = require('../models/board.model');
 
-
 router.get('/', (req, res, next) => {
   Board.find()
     .then(result => {
