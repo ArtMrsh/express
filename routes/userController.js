@@ -1,8 +1,7 @@
 const router = require('express').Router();
 const checkValidity = require('../helpers/checkValidity');
-// const mongoose = require('mongoose');
 const User = require('../models/user.model');
-
+const passport = require('passport');
 
 router.get('/', (req, res, next) => {
   User.find()
@@ -24,25 +23,43 @@ router.get('/:id', (req, res, next) => {
     })
 })
 
-router.post('/', (req, res, next) => {
+router.post('/register', (req, res, next) => {
 
-  const user = new User({
+  const name = req.body.name;
+  const email = req.body.email;
+  const password = req.body.password;
+
+  const newUser = new User({
     name: req.body.name,
-    email: req.body.email
+    email: req.body.email,
+    password: req.body.password
   })
 
-  user.save()
+  newUser.save()
     .then(result => {
       res.send(result)
     })
     .catch(err => {
-      res.status(500).send(err.message)
+      res.send(err.message)
     })
 
 })
 
+router.post('/login',
+  passport.authenticate('local'),
+  (req, res, next) => {
+    if (req.isAuthenticated()) {
+      res.send(req.user);
+    } else {
+      res.sendStatus(401);
+    }
+  }
+);
+
 router.put('/:userId', (req, res, next) => {
-  User.findByIdAndUpdate(req.params.userId, req.body, { new: true })
+  User.findByIdAndUpdate(req.params.userId, req.body, {
+      new: true
+    })
     .then(result => {
       return result;
     })
@@ -56,7 +73,7 @@ router.put('/:userId', (req, res, next) => {
 })
 
 router.delete('/:userId', (req, res, next) => {
-  const userId = req.params.userId; 
+  const userId = req.params.userId;
   User.findByIdAndRemove(userId)
     .then(result => {
       res.send(result)

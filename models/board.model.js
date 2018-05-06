@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const boardSchema = new Schema({
-  name: {type: String},
-  lists: {type: []}
+  name: { type: String },
+  lists: { type: mongoose.Schema.Types.ObjectId, ref: 'List' }
 })
 
 module.exports = mongoose.model('Board', boardSchema);
