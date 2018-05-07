@@ -13,7 +13,6 @@ const { boardController } = require('./routes');
 const { listController } = require('./routes');
 const { taskController } = require('./routes');
 
-
 const app = express();
 
 mongoose.connect('mongodb://root:artemko_2013@ds263109.mlab.com:63109/nodejs-test', (err) => {

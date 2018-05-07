@@ -7,7 +7,6 @@ const Board = require('../models/board.model');
 const List = require('../models/list.model');
 const Task = require('../models/task.model');
 
-
 const typeDefs = `
 
   type Query {

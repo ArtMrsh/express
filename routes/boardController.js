@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const Board = require('../models/board.model');
 
-
 router.get('/', (req, res, next) => {
   Board.schema.method.updateData((err, data) => {
     if (err) {
@@ -46,7 +45,6 @@ router.put('/:boardId', (req, res, next) => {
       return result;
     })
     .then(data => {
-      console.log(data)
       res.send(data);
     })
     .catch(err => {
