@@ -15,7 +15,7 @@ passport.deserializeUser((id, done) => {
 })
 
 passport.use('local', new LocalStrategy((login, password, done) => {
-  User.findOne({name: login})
+  User.findOne({ name: login })
     .select('_id password')
     .then(data => {
       if (!data) {
@@ -25,7 +25,7 @@ passport.use('local', new LocalStrategy((login, password, done) => {
       bycript.compare(password, data.password)
         .then(result => {
           if (result) {
-            done(null, {id : data._id})
+            done(null, { id : data._id })
           } else {
             done(null, false);
           }

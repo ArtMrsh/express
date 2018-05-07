@@ -1,9 +1,8 @@
 const router = require('express').Router();
-const Board = require('../models/board.model');
-
+const List = require('../models/list.model');
 
 router.get('/', (req, res, next) => {
-  Board.schema.method.updateData((err, data) => {
+  List.schema.method.updateData((err, data) => {
     if (err) {
       next(err)
     } else {
@@ -13,7 +12,7 @@ router.get('/', (req, res, next) => {
 })
 
 router.get('/:id', (req, res, next) => {
-  Board.findById(req.params.id)
+  List.findById(req.params.id)
     .then(result => {
       res.send(result)
     })
@@ -24,12 +23,13 @@ router.get('/:id', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
 
-  const board = new Board({
+  const list = new List({
     name: req.body.name,
-    lists: req.body.lists
+    boardId: req.body.boardId,
+    tasks: req.body.tasks
   })
 
-  board.save()
+  list.save()
     .then(result => {
       res.send(result)
     }).catch(err => {
@@ -38,15 +38,14 @@ router.post('/', (req, res, next) => {
 
 })
 
-router.put('/:boardId', (req, res, next) => {
-  Board.findByIdAndUpdate(req.params.boardId, req.body, {
+router.put('/:listId', (req, res, next) => {
+  List.findByIdAndUpdate(req.params.listId, req.body, {
       new: true
     })
     .then(result => {
       return result;
     })
     .then(data => {
-      console.log(data)
       res.send(data);
     })
     .catch(err => {
@@ -54,9 +53,9 @@ router.put('/:boardId', (req, res, next) => {
     })
 })
 
-router.delete('/:boardId', (req, res, next) => {
-  const boardId = req.params.boardId;
-  Board.findByIdAndRemove(boardId)
+router.delete('/:listId', (req, res, next) => {
+  const listId = req.params.listId;
+  List.findByIdAndRemove(listId)
     .then(result => {
       res.send(result)
     })

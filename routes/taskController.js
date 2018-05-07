@@ -1,19 +1,18 @@
 const router = require('express').Router();
-const Board = require('../models/board.model');
-
+const Task = require('../models/task.model');
 
 router.get('/', (req, res, next) => {
-  Board.schema.method.updateData((err, data) => {
-    if (err) {
-      next(err)
-    } else {
-      res.send(data)
-    }
-  })
+  Task.find()
+    .then(result => {
+      res.send(result)
+    })
+    .catch(err => {
+      res.send(result)
+    })
 })
 
 router.get('/:id', (req, res, next) => {
-  Board.findById(req.params.id)
+  Task.findById(req.params.id)
     .then(result => {
       res.send(result)
     })
@@ -24,12 +23,13 @@ router.get('/:id', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
 
-  const board = new Board({
-    name: req.body.name,
-    lists: req.body.lists
+  const task = new Task({
+    title: req.body.title,
+    listId: req.body.listId,
+    author: req.body.author
   })
 
-  board.save()
+  task.save()
     .then(result => {
       res.send(result)
     }).catch(err => {
@@ -38,15 +38,12 @@ router.post('/', (req, res, next) => {
 
 })
 
-router.put('/:boardId', (req, res, next) => {
-  Board.findByIdAndUpdate(req.params.boardId, req.body, {
-      new: true
-    })
+router.put('/:taskId', (req, res, next) => {
+  Task.findByIdAndUpdate(req.params.taskId, req.body, { new: true })
     .then(result => {
       return result;
     })
     .then(data => {
-      console.log(data)
       res.send(data);
     })
     .catch(err => {
@@ -54,9 +51,9 @@ router.put('/:boardId', (req, res, next) => {
     })
 })
 
-router.delete('/:boardId', (req, res, next) => {
-  const boardId = req.params.boardId;
-  Board.findByIdAndRemove(boardId)
+router.delete('/:taskId', (req, res, next) => {
+  const taskId = req.params.taskId; 
+  Task.findByIdAndRemove(taskId)
     .then(result => {
       res.send(result)
     })
