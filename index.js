@@ -8,10 +8,10 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const graphql = require('./graphql/index');
 
-const { userController } = require('./routes');
-const { boardController } = require('./routes');
-const { listController } = require('./routes');
-const { taskController } = require('./routes');
+const { userRoutes } = require('./routes');
+const { boardRoutes } = require('./routes');
+const { listRoutes } = require('./routes');
+const { taskRoutes } = require('./routes');
 
 const app = express();
 
@@ -48,13 +48,13 @@ app.use(expressValidator());
 
 graphql(app);
 
-app.use('/user', userController);
+app.use('/user', userRoutes);
 
-app.use('/board', boardController);
+app.use('/board', boardRoutes);
 
-app.use('/list', listController)
+app.use('/list', listRoutes)
 
-app.use('/task', listController)
+app.use('/task', listRoutes)
 
 app.use((err, req, res, next) => {
   res.status(500).send(err.message)

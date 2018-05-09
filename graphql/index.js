@@ -1,6 +1,5 @@
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const { makeExecutableSchema } = require('graphql-tools');
-const bodyParser = require('body-parser');
 
 const User = require('../models/user.model');
 const Board = require('../models/board.model');
@@ -87,6 +86,6 @@ const schema = makeExecutableSchema({
 });
 
 module.exports = (app) => {
-  app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
+  app.use('/graphql', graphqlExpress({ schema }));
   app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 };
