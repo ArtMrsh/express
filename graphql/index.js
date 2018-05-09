@@ -10,6 +10,7 @@ const typeDefs = `
 
   type Query {
     users: [User]
+    user(id: ID): User 
     boards: [Board]
     lists: [List]
     tasks: [Task]
@@ -17,72 +18,90 @@ const typeDefs = `
 
   type User {
     id: ID!
-    name: String
-    email: String
+    name: String!
+    email: String!
   }
 
   type Board {
-    name: String,
-    lists: [List]
+    name: String!
+    lists: [List]!
   }
 
   type List {
-    name: String,
-    boardId: Int,
-    tasks: [Task]
+    name: String!
+    boardId: Int!
+    tasks: [Task]!
   }
 
   type Task {
-    title: String,
-    listId: Int,
-    author: String
+    title: String!
+    listId: Int!
+    author: User!
   }
 
-  type Mutations {
-    addUser(user:UserInput!): User
+  type Mutation {
+    addUser(user: UserInput!): User
+    updateUser(user: UserInput!, id: ID!): User
+    removeUser(id: ID!): User
   }
 
   input UserInput {
-    name: String!,
+    name: String!
     email: String
   }
 
 `;
 
 const resolvers = {
+  
   Query: {
 
-    users() {
-      return User.find({});
+    async users() {
+      return await User.find({});
     },
 
-    boards() {
-      return Board.find({})
+    async user(parent, args) {
+      const { id } = args;
+      await User.findById(id);
     },
 
-    lists() {
-      return List.find({})
+    async boards() {
+      return await Board.find({})
     },
 
-    tasks() {
-      return Task.find({})
+    async lists() {
+      return await List.find({})
+    },
+
+    async tasks() {
+      return await Task.find({})
     }
 
   },
 
-  Mutations: {
+  Mutation: {
+
     async addUser(root, { user: userInput }) {
       const user = new User(userInput);
-      user.password = '1111';
-      await user.save();
-      return user.toObject();
+      user.password = 'pass';
+      return await user.save();
+    },
+    async updateUser(parent, args) {
+      const { id, user } = args;
+      return await User.findByIdAndUpdate(id, user, { new: true });
+    },
+
+    async removeUser(parent, args) {
+      const { id } = args;
+      return await User.findByIdAndRemove(id);
     }
+
   }
 }
 
 const schema = makeExecutableSchema({
   typeDefs,
-  resolvers,
+  resolvers
 });
 
 module.exports = (app) => {

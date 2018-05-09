@@ -7,4 +7,10 @@ const listSchema = new Schema({
   tasks: { type: mongoose.Schema.Types.ObjectId, ref: 'Task' }
 })
 
-module.exports = mongoose.model('List', listSchema);
+const List = mongoose.model('List', listSchema);
+
+listSchema.method.updateData = function (callback) {
+  List.find().populate('Task').exec(callback);
+}
+
+module.exports = List;

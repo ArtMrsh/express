@@ -6,4 +6,10 @@ const boardSchema = new Schema({
   lists: { type: mongoose.Schema.Types.ObjectId, ref: 'List' }
 })
 
-module.exports = mongoose.model('Board', boardSchema);
+const Board = mongoose.model('Board', boardSchema);
+
+boardSchema.method.updateData = function (callback) {
+  Board.find().populate('List').exec(callback);
+}
+
+module.exports = Board;
