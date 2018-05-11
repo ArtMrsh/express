@@ -1,7 +1,6 @@
-const router = require('express').Router();
 const Task = require('../models/task.model');
 
-router.get('/', (req, res, next) => {
+exports.findAllTasks = (req, res, next) => {
   Task.find()
     .then(result => {
       res.send(result)
@@ -9,9 +8,9 @@ router.get('/', (req, res, next) => {
     .catch(err => {
       res.send(result)
     })
-})
+}
 
-router.get('/:id', (req, res, next) => {
+exports.findTaskById = (req, res, next) => {
   Task.findById(req.params.id)
     .then(result => {
       res.send(result)
@@ -19,9 +18,9 @@ router.get('/:id', (req, res, next) => {
     .catch(err => {
       res.send(err.message)
     })
-})
+}
 
-router.post('/', (req, res, next) => {
+exports.createTask = (req, res, next) => {
 
   const task = new Task({
     title: req.body.title,
@@ -36,9 +35,9 @@ router.post('/', (req, res, next) => {
       res.status(500).send(err.message)
     })
 
-})
+}
 
-router.put('/:taskId', (req, res, next) => {
+exports.updateTask = (req, res, next) => {
   Task.findByIdAndUpdate(req.params.taskId, req.body, { new: true })
     .then(result => {
       return result;
@@ -49,10 +48,10 @@ router.put('/:taskId', (req, res, next) => {
     .catch(err => {
       res.send(err.message)
     })
-})
+}
 
-router.delete('/:taskId', (req, res, next) => {
-  const taskId = req.params.taskId; 
+exports.removeTask = (req, res, next) => {
+  const taskId = req.params.taskId;
   Task.findByIdAndRemove(taskId)
     .then(result => {
       res.send(result)
@@ -60,6 +59,4 @@ router.delete('/:taskId', (req, res, next) => {
     .catch(err => {
       res.status(404).send('Not found')
     })
-})
-
-module.exports = router;
+}
