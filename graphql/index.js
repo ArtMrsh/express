@@ -98,7 +98,7 @@ const resolvers = {
     }
 
   }
-}
+};
 
 const schema = makeExecutableSchema({
   typeDefs,
