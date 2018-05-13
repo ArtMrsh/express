@@ -8,8 +8,5 @@ const boardSchema = new Schema({
 
 const Board = mongoose.model('Board', boardSchema);
 
-boardSchema.method.updateData = function (callback) {
-  Board.find().populate('List').exec(callback);
-}
 
 module.exports = Board;

@@ -42,14 +42,11 @@ exports.createUser = (req, res, next) => {
 }
 
 exports.loginUser = (req, res, next) => {
-  passport.authenticate('local'),
-    (req, res, next) => {
-      if (req.isAuthenticated()) {
-        res.send(req.user);
-      } else {
-        res.sendStatus(401);
-      }
-    }
+  if (req.isAuthenticated()) {
+    res.send(req.user);
+  } else {
+    res.status(404).send('NotFound');
+  }
 }
 
 exports.updateUser = (req, res, next) => {

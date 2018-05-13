@@ -1,7 +1,8 @@
 const Task = require('../models/task.model');
+const bus = require('./../eventbus');
 
 exports.findAllTasks = (req, res, next) => {
-  Task.find()
+  Task.find().populate('listId author assignees')
     .then(result => {
       res.send(result)
     })
@@ -11,7 +12,7 @@ exports.findAllTasks = (req, res, next) => {
 }
 
 exports.findTaskById = (req, res, next) => {
-  Task.findById(req.params.id)
+  Task.findById(req.params.id).populate('listId author assignees')
     .then(result => {
       res.send(result)
     })
@@ -25,15 +26,21 @@ exports.createTask = (req, res, next) => {
   const task = new Task({
     title: req.body.title,
     listId: req.body.listId,
-    author: req.body.author
+    author: req.body.author,
+    assignees: req.body.assignees
   })
+
+  bus.emit('assigning', {
+    task,
+    assignees: req.body.assignees
+  });
 
   task.save()
     .then(result => {
       res.send(result)
     }).catch(err => {
       res.status(500).send(err.message)
-    })
+    });
 
 }
 
