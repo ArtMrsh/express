@@ -1,7 +1,11 @@
-const userController = require('./userController');
-const boardController = require('./boardController');
+const userRoutes = require('./user.routes');
+const boardRoutes = require('./board.routes');
+const listRoutes = require('./list.routes');
+const taskRoutes = require('./task.routes');
 
 module.exports = {
-  userController,
-  boardController,
+  userRoutes,
+  boardRoutes,
+  listRoutes,
+  taskRoutes
 }

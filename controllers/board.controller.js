@@ -1,30 +1,26 @@
-const router = require('express').Router();
 const Board = require('../models/board.model');
 
-
-router.get('/', (req, res, next) => {
-  console.log(req.user)
-  Board.find()
+exports.findAllBoards = (req, res, next) => {
+  Board.find().populate('lists')
     .then(result => {
       res.send(result)
     })
     .catch(err => {
-      res.send(result)
+      res.send(err)
     })
-})
+}
 
-router.get('/:id', (req, res, next) => {
-  Board.findById(req.params.id)
+exports.findBoardById = (req, res, next) => {
+  Board.findById(req.params.id).populate('lists')
     .then(result => {
       res.send(result)
     })
     .catch(err => {
       res.send(err.message)
     })
-})
+}
 
-router.post('/', (req, res, next) => {
-
+exports.createBoard = (req, res, next) => {
   const board = new Board({
     name: req.body.name,
     lists: req.body.lists
@@ -36,25 +32,26 @@ router.post('/', (req, res, next) => {
     }).catch(err => {
       res.status(500).send(err.message)
     })
+}
 
-})
 
-router.put('/:boardId', (req, res, next) => {
-  Board.findByIdAndUpdate(req.params.boardId, req.body, { new: true })
+exports.updateBoard = (req, res, next) => {
+  Board.findByIdAndUpdate(req.params.boardId, req.body, {
+      new: true
+    })
     .then(result => {
       return result;
     })
     .then(data => {
-      console.log(data)
       res.send(data);
     })
     .catch(err => {
       res.send(err.message)
     })
-})
+}
 
-router.delete('/:boardId', (req, res, next) => {
-  const boardId = req.params.boardId; 
+exports.removeBoard = (req, res, next) => {
+  const boardId = req.params.boardId;
   Board.findByIdAndRemove(boardId)
     .then(result => {
       res.send(result)
@@ -62,6 +59,4 @@ router.delete('/:boardId', (req, res, next) => {
     .catch(err => {
       res.status(404).send('Not found')
     })
-})
-
-module.exports = router;
+}

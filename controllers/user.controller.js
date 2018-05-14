@@ -1,9 +1,7 @@
-const router = require('express').Router();
-const checkValidity = require('../helpers/checkValidity');
 const User = require('../models/user.model');
 const passport = require('passport');
 
-router.get('/', (req, res, next) => {
+exports.findAllUsers = (req, res, next) => {
   User.find()
     .then(result => {
       res.send(result)
@@ -11,9 +9,9 @@ router.get('/', (req, res, next) => {
     .catch(err => {
       res.send(result)
     })
-})
+}
 
-router.get('/:id', (req, res, next) => {
+exports.findUserById = (req, res, next) => {
   User.findById(req.params.id)
     .then(result => {
       res.send(result)
@@ -21,10 +19,9 @@ router.get('/:id', (req, res, next) => {
     .catch(err => {
       res.send(err.message)
     })
-})
+}
 
-router.post('/register', (req, res, next) => {
-
+exports.createUser = (req, res, next) => {
   const name = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
@@ -42,24 +39,20 @@ router.post('/register', (req, res, next) => {
     .catch(err => {
       res.send(err.message)
     })
+}
 
-})
-
-router.post('/login',
-  passport.authenticate('local'),
-  (req, res, next) => {
-    if (req.isAuthenticated()) {
-      res.send(req.user);
-    } else {
-      res.sendStatus(401);
-    }
+exports.loginUser = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    res.send(req.user);
+  } else {
+    res.status(404).send('NotFound');
   }
-);
+}
 
-router.put('/:userId', (req, res, next) => {
+exports.updateUser = (req, res, next) => {
   User.findByIdAndUpdate(req.params.userId, req.body, {
-      new: true
-    })
+    new: true
+  })
     .then(result => {
       return result;
     })
@@ -70,9 +63,9 @@ router.put('/:userId', (req, res, next) => {
     .catch(err => {
       res.send(err.message)
     })
-})
+}
 
-router.delete('/:userId', (req, res, next) => {
+exports.removeUser = (req, res, next) => {
   const userId = req.params.userId;
   User.findByIdAndRemove(userId)
     .then(result => {
@@ -81,6 +74,4 @@ router.delete('/:userId', (req, res, next) => {
     .catch(err => {
       res.status(404).send('Not found')
     })
-})
-
-module.exports = router;
+}
