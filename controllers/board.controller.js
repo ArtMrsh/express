@@ -1,7 +1,7 @@
 const Board = require('../models/board.model');
 
 exports.findAllBoards = (req, res, next) => {
-  Board.find({}).populate('lists')
+  Board.find().populate('lists')
     .then(result => {
       res.send(result)
     })
