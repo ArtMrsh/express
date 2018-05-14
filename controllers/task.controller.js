@@ -1,7 +1,7 @@
 const Task = require('../models/task.model');
 
 exports.findAllTasks = (req, res, next) => {
-  Task.find()
+  Task.find().populate('author listId')
     .then(result => {
       res.send(result)
     })
@@ -11,7 +11,7 @@ exports.findAllTasks = (req, res, next) => {
 }
 
 exports.findTaskById = (req, res, next) => {
-  Task.findById(req.params.id)
+  Task.findById(req.params.id).populate('author listId')
     .then(result => {
       res.send(result)
     })

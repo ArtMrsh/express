@@ -3,13 +3,13 @@ const Schema = mongoose.Schema;
 
 const boardSchema = new Schema({
   name: { type: String },
-  lists: { type: mongoose.Schema.Types.ObjectId, ref: 'List' }
+  lists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'List' }]
 })
 
 const Board = mongoose.model('Board', boardSchema);
 
-boardSchema.method.updateData = function (callback) {
-  Board.find().populate('List').exec(callback);
-}
+// boardSchema.methods.updateData = function (callback) {
+//   Board.find().populate('lists').exec(callback);
+// }
 
 module.exports = Board;

@@ -1,17 +1,17 @@
 const List = require('../models/list.model');
 
 exports.findAllLists = (req, res, next) => {
-  List.find()
+  List.find({}).populate('tasks boardId')
     .then(result => {
       res.send(result)
     })
     .catch(err => {
-      res.send(result)
+      res.send(err.message)
     })
 }
 
 exports.findListById = (req, res, next) => {
-  List.findById(req.params.id)
+  List.findById(req.params.id).populate('tasks boardId')
     .then(result => {
       res.send(result)
     })

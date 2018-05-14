@@ -32,13 +32,13 @@ const typeDefs = `
 
   type List {
     name: String!
-    boardId: Int!
+    boardId: String!
     tasks: [Task]!
   }
 
   type Task {
     title: String!
-    listId: Int!
+    listId: String!
     author: User!
   }
 
@@ -73,13 +73,13 @@ const typeDefs = `
 
   input ListInput {
     name: String!
-    boardId: Int!
+    boardId: String!
     tasks: [TaskInput]!
   }
 
   input TaskInput {
     title: String!
-    listId: Int!
+    listId: String!
     author: UserInput
   }
 
@@ -95,34 +95,34 @@ const resolvers = {
 
     async user(parent, args) {
       const { id } = args;
-      await User.findById(id);
+      return await User.findById(id);
     },
 
     async boards() {
-      return await Board.find({})
+      return await Board.find({}).populate('lists');
     },
 
     async board(parent, args) {
       const { id } = args;
-      await Board.findById(id);
+      return await Board.findById(id).populate('lists');
     },
 
     async lists() {
-      return await List.find({})
+      return await List.find({}).populate('tasks');
     },
 
     async list(parent, args) {
       const { id } = args;
-      await Board.findById(id);
+      return await Board.findById(id).populate('tasks');
     },
 
     async tasks() {
-      return await Task.find({})
+      return await Task.find({}).populate('author listId');
     },
 
     async list(parent, args) {
       const { id } = args;
-      await Task.findById(id);
+      return await Task.findById(id).populate('author listId');
     },
 
   },

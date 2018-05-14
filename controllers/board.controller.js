@@ -1,17 +1,17 @@
 const Board = require('../models/board.model');
 
 exports.findAllBoards = (req, res, next) => {
-  Board.find()
+  Board.find({}).populate('lists')
     .then(result => {
       res.send(result)
     })
     .catch(err => {
-      res.send(result)
+      res.send(err)
     })
 }
 
 exports.findBoardById = (req, res, next) => {
-  Board.findById(req.params.id)
+  Board.findById(req.params.id).populate('lists')
     .then(result => {
       res.send(result)
     })
@@ -36,7 +36,9 @@ exports.createBoard = (req, res, next) => {
 
 
 exports.updateBoard = (req, res, next) => {
-  Board.findByIdAndUpdate(req.params.boardId, req.body, { new: true })
+  Board.findByIdAndUpdate(req.params.boardId, req.body, {
+      new: true
+    })
     .then(result => {
       return result;
     })

@@ -54,7 +54,7 @@ app.use('/board', boardRoutes);
 
 app.use('/list', listRoutes)
 
-app.use('/task', listRoutes)
+app.use('/task', taskRoutes)
 
 app.use((err, req, res, next) => {
   res.status(500).send(err.message)
